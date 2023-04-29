@@ -1,5 +1,12 @@
-import websockets, cv2, pickle, struct, asyncio
+import asyncio
+import cv2
+import pickle
+import struct
+import websockets
 
+
+# port = 9998
+# host_ip = '192.168.7.207'
 
 async def client():
     async with websockets.connect('ws://192.168.7.207:9998') as websocket:
@@ -7,10 +14,6 @@ async def client():
         payload_size = struct.calcsize('Q')
         data = b""
         while True:
-            # host_name = socket.gethostname()
-            port = 9998
-            host_ip = '192.168.7.207'
-            # client_socket.connect((host_ip, port))
             while len(data) < payload_size:
                 packet = await websocket.recv()
                 if not packet:
@@ -24,7 +27,6 @@ async def client():
                 data += await websocket.recv()
 
             frame_data = data[:msg_size]
-            print(len(frame_data), msg_size)
             data = data[msg_size:]
             frame = pickle.loads(frame_data)
 
