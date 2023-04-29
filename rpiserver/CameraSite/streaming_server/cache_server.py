@@ -1,17 +1,24 @@
 import socket, cv2, pickle, struct
 import imutils
 import threading
+
+import asyncio
+import websockets
+import django
 import cv2
 import sys
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+#django.setup()
+
+#server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #host_name = socket.gethostname()
 #host_ip = socket.gethostbyname(host_name)
 host_ip = '0.0.0.0'
 port = 9999
 socket_address = (host_ip, 9998)
-server_socket.bind(socket_address)
-server_socket.listen()
+#server_socket.bind(socket_address)
+#server_socket.listen()
 
 # global frame
 frame = None
@@ -45,39 +52,21 @@ def start_video_stream():
 #thread = threading.Thread(target=start_video_stream, args=())
 #thread.start()
 
-def server_client(addr, client_socket):
+async def server_client(websocket, path):
     global frame
-    try:
-        print('Client {} connected'.format(addr))
-        if client_socket:
-            while True:
-                a = pickle.dumps(frame)
-                message = struct.pack('Q', len(a)) + a
-                client_socket.sendall(message)
-
-
-    except Exception as e:
-        print('Client disconnected')
-        print(e)
-
-
+    #await websocket.recv()
+    while True:
+        a = pickle.dumps(frame)
+        message = struct.pack('Q', len(a)) + a
+        await websocket.send(message)
 
 if __name__ == "__main__":
     
     thread1 = threading.Thread(target=start_video_stream, args=())
     thread1.start()
     
-    # TODO add thread pool?
-    while True:
-        try:
-            client_socket, addr = server_socket.accept()
-            print(addr)
-            thread2 = threading.Thread(target=server_client, args=(addr, client_socket))
-            thread2.start()
-        except Exception as e:
-            print(e, 'tear down ?')
-        finally:
-            thread1.join()
-            thread2.join()
-            sys.exit(0)
+    start_server = websockets.serve(server_client, *socket_address)
 
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+     
