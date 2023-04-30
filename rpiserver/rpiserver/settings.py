@@ -121,16 +121,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-"""
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'host': [('localhost', 6379)],
+            'hosts': [('localhost', 6379)],
         },
     }
 }
-"""
 
 
 # Internationalization
