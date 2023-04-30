@@ -44,7 +44,6 @@ def start_video_stream():
 
 async def server_client(websocket, path):
     global frame
-    #await websocket.recv()
     while True:
         a = pickle.dumps(frame)
         message = struct.pack('Q', len(a)) + a

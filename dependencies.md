@@ -118,7 +118,7 @@ sudo systemctl enable gunicorn.socket
 - View service
 ```
 sudo systemctl status gunicorn.socket
-``
+```
 
 - Check Gunicorn logs
 ```
