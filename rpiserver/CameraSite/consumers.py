@@ -7,6 +7,7 @@ import struct
 class VideoConsumer(WebsocketConsumer):
 
     def connect(self):
+        self.accept()
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_name = socket.gethostname()
         port = 9999
