@@ -1,0 +1,17 @@
+[Unit]
+Description=CameraApp Daphne Service
+After=network.target
+
+[Service]
+Type=simple 
+User=mrrobot
+Group=www-data
+WorkingDirectory=/home/mrrobot/websites/SecurityCameraApp/rpiserver
+ExecStart=/home/mrrobot/.pyenv/versions/CameraSite/bin/daphne -p 8001 rpiserver.asgi:application
+StandardOutput=file:/tmp/stdout.log
+StandardError=file:/tmp/stderr.log
+#NonBlocking=true
+
+
+[Install]
+WantedBy=multi-user.target

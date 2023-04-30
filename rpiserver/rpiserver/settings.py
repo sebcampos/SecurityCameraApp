@@ -25,12 +25,14 @@ SECRET_KEY = 'django-insecure-)qnk1t1=ermhn4vc-l$48u$333!wfw0opyt80)d0!3x8m%4$s$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.7.207', '0.0.0.0']
+ALLOWED_HOSTS = ['192.168.7.207', '0.0.0.0', '192.168.7.235']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # daphne needs to be listed first
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # additions
-    'rest_framework'
+    'rest_framework',
+    'channels',
+    
+    # user defined apps
+    'CameraSite',
+    'chat'
 ]
 
 
@@ -81,7 +88,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'rpiserver.wsgi.application'
+# WSGI_APPLICATION = 'rpiserver.wsgi.application'
 ASGI_APPLICATION = 'rpiserver.asgi.application'
 
 
@@ -112,6 +119,18 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+"""
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'host': [('localhost', 6379)],
+        },
+    }
+}
+"""
 
 
 # Internationalization

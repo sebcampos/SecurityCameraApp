@@ -1,0 +1,20 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+
+
+[Service]
+User=mrrobot
+Group=www-data
+WorkingDirectory=/home/mrrobot/websites/SecurityCameraApp/rpiserver
+ExecStart=/home/mrrobot/.pyenv/versions/CameraSite/bin/gunicorn \
+	--access-logfile - \
+	-k uvicorn.workers.UvicornWorker \
+	--workers 3 \
+	--bind unix:/run/gunicorn.sock \
+	rpiserver.asgi:application
+
+[Install]
+WantedBy=multi-user.target

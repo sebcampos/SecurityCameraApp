@@ -1,0 +1,36 @@
+#added this block
+upstream channels-backend {
+ server 0.0.0.0:8001;
+}
+
+
+
+server {
+	listen 443 ssl http2;
+	server_name 192.168.7.207;
+        ssl_certificate /home/mrrobot/websites/Cert/rootCA.crt;
+	ssl_certificate_key /home/mrrobot/websites/Cert/rootCA.key;	
+	location = /favicon.ico { access_log off; log_not_found off;}
+proxy_read_timeout 86400s;
+proxy_send_timeout 86400s;
+	location /static/ {
+		root /home/mrrobot/websites/SecurityCameraApp/rpiserver;
+	}
+	
+	location / {
+		include proxy_params;
+		proxy_pass http://unix:/run/gunicorn.sock;
+	}
+
+
+	location /ws/ {
+      		proxy_set_header      Connection "keep-alive, Upgrade";
+      		proxy_set_header      Upgrade websocket;
+		proxy_redirect off;
+        	proxy_pass http://channels-backend;
+        	proxy_set_header Host $host;
+        	proxy_set_header X-Real-IP $remote_addr;
+        	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        	proxy_set_header X-Forwarded-Host $server_name;
+	}
+}
