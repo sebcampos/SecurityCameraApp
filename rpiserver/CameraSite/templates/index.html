@@ -26,7 +26,7 @@
 
     var check = true;
     socket.onmessage = function(videoStream) {
-
+        console.log(videoStream)
         var video = document.querySelector('video');
         var videoUrl = window.URL.createObjectURL(videoStream.data);
         video.src = videoUrl;
