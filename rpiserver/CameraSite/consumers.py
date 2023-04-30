@@ -29,7 +29,7 @@ class VideoConsumer(WebsocketConsumer):
             frame_data = data[:msg_size]
             data = data[msg_size:]
             frame = pickle.loads(frame_data)
-            await self.send(bytes_data=frame)
+            self.send(bytes_data=frame)
 
     def receive(self, text_data=None, bytes_data=None):
         print(text_data)
