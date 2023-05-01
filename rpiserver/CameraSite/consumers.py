@@ -33,9 +33,9 @@ class VideoConsumer(WebsocketConsumer):
             frame_data = data[:msg_size]
             data = data[msg_size:]
             frame = pickle.loads(frame_data)
-            cnt = cv2.imencode('.png', frame)
-            b64 = base64.encode(cnt)
-            self.send(bytes_data=base64)
+            cnt = cv2.imencode('.jpeg', frame)[1]
+            b64 = base64.encodestring(cnt)
+            self.send(bytes_data=b64)
 
     def receive(self, text_data=None, bytes_data=None):
         print(text_data)
