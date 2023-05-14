@@ -6,18 +6,11 @@ import socket
 import pickle
 import struct
 
-
 # TODO make a view
 
 class VideoConsumer(WebsocketConsumer):
-    video_streaming: bool
 
     def connect(self):
-        self.video_streaming = True
-        self.accept()
-        self.send('video stream starting')
-
-    def receive(self, text_data=None, bytes_data=None):
         self.accept()
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_name = socket.gethostname()
@@ -26,7 +19,7 @@ class VideoConsumer(WebsocketConsumer):
         client_socket.connect((host_ip, port))
         data = b""
         payload_size = struct.calcsize('Q')
-        while self.video_streaming:
+        while True:
             while len(data) < payload_size:
                 packet = client_socket.recv(4 * 1024)
                 if not packet:
@@ -45,5 +38,5 @@ class VideoConsumer(WebsocketConsumer):
             b64 = base64.encodestring(cnt)
             self.send(bytes_data=b64)
 
-    def disconnect(self, close_code):
-        self.video_streaming = False
+    def receive(self, text_data=None, bytes_data=None):
+        self.accept()
