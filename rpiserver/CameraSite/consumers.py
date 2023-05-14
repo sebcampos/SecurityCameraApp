@@ -1,5 +1,5 @@
 import base64
-
+from channels.consumer import SyncConsumer
 from channels.generic.websocket import WebsocketConsumer
 import cv2
 import socket
@@ -7,9 +7,16 @@ import pickle
 import struct
 
 
-class VideoConsumer(WebsocketConsumer):
+# TODO make a view
+
+class VideoConsumer(SyncConsumer):
+    video_streaming: bool
 
     def connect(self):
+        self.video_streaming = True
+        self.accept()
+
+    def receive(self, text_data=None, bytes_data=None):
         self.accept()
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_name = socket.gethostname()
@@ -18,7 +25,7 @@ class VideoConsumer(WebsocketConsumer):
         client_socket.connect((host_ip, port))
         data = b""
         payload_size = struct.calcsize('Q')
-        while True:
+        while self.video_streaming:
             while len(data) < payload_size:
                 packet = client_socket.recv(4 * 1024)
                 if not packet:
@@ -37,5 +44,5 @@ class VideoConsumer(WebsocketConsumer):
             b64 = base64.encodestring(cnt)
             self.send(bytes_data=b64)
 
-    def receive(self, text_data=None, bytes_data=None):
-        print(text_data)
+    def disconnect(self, close_code):
+        self.video_streaming = False
