@@ -15,6 +15,7 @@ class VideoConsumer(SyncConsumer):
     def connect(self):
         self.video_streaming = True
         self.accept()
+        self.send('video stream starting')
 
     def receive(self, text_data=None, bytes_data=None):
         self.accept()
