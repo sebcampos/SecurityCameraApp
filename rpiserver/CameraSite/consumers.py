@@ -9,7 +9,7 @@ import struct
 
 # TODO make a view
 
-class VideoConsumer(SyncConsumer):
+class VideoConsumer(WebsocketConsumer):
     video_streaming: bool
 
     def connect(self):
